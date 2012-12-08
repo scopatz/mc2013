@@ -11,26 +11,26 @@ all-via-pdf: $(manuscript).tex $(references).bib
 	pdflatex $(latexopt) $<
 
 all-via-dvi: $(manuscript).tex $(references).bib
-    latex $(latexopt) $(manuscript) $<
-    bibtex $(manuscript).aux $<
-    latex $(latexopt) $(manuscript) $<
-    latex $(latexopt) $(manuscript) $<
-    dvipdf $(manuscript) $<
+	latex $(latexopt) $(manuscript) $<
+	bibtex $(manuscript).aux $<
+	latex $(latexopt) $(manuscript) $<
+	latex $(latexopt) $(manuscript) $<
+	dvipdf $(manuscript) $<
 
 clean:
-    rm -f *.pdf *.dvi *.toc *.aux *.out *.log *.bbl *.blg *.log *.spl *~ *.spl *.zip
+	rm -f *.pdf *.dvi *.toc *.aux *.out *.log *.bbl *.blg *.log *.spl *~ *.spl *.zip
 
 realclean: clean
-    rm -rf $(manuscript).dvi
-    rm -f $(manuscript).pdf
+	rm -rf $(manuscript).dvi
+	rm -f $(manuscript).pdf
 
 %.ps :%.eps
-    convert $< $@
+	convert $< $@
 
 %.png :%.eps
-    convert $< $@
+	convert $< $@
 
 zip:
-    zip paper.zip *.tex *.eps *.bib
+	zip paper.zip *.tex *.eps *.bib
 
 .PHONY: all clean
