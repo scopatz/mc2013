@@ -6,16 +6,16 @@ all: all-via-dvi
 
 all-via-pdf: $(manuscript).tex $(references).bib
 	pdflatex $(latexopt) $<
-	bibtex $(basename $<).aux
+	bibtex $(manuscript $<).aux
 	pdflatex $(latexopt) $<
 	pdflatex $(latexopt) $<
 
-all-via-dvi: $(manuscript).tex $(references).bib
-	latex $(latexopt) $(manuscript) $<
-	bibtex $(manuscript).aux $<
-	latex $(latexopt) $(manuscript) $<
-	latex $(latexopt) $(manuscript) $<
-	dvipdf $(manuscript) $<
+all-via-dvi: 
+	latex $(latexopt) $(manuscript)
+	bibtex $(manuscript).aux
+	latex $(latexopt) $(manuscript)
+	latex $(latexopt) $(manuscript)
+	dvipdf $(manuscript)
 
 clean:
 	rm -f *.pdf *.dvi *.toc *.aux *.out *.log *.bbl *.blg *.log *.spl *~ *.spl *.zip
