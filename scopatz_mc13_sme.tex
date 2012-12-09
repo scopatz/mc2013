@@ -59,8 +59,8 @@
 % Insert authors' names and short version of title in lines below
 %
 \authorHead{Anthony M. Scopatz}
-\shortTitle{First \& second order approximations to stage numbers in symbolic 
-            multicomponent enrichment}
+\shortTitle{First \& second order approximations to stage numbers in
+            multicomponent enrichment cascades}
 
 \confTitle{International Conference on Mathematics and Computational Methods
   Applied to Nuclear Science \& Engineering (M\&C 2013)}
@@ -74,8 +74,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-\title{FIRST \& SECOND ORDER APPROXIMATIONS TO STAGE NUMBERS IN SYMBOLIC 
-       MULTICOMPONENT ENRICHMENT}
+\title{FIRST \& SECOND ORDER APPROXIMATIONS TO STAGE NUMBERS IN 
+       MULTICOMPONENT ENRICHMENT CASCADES}
 
 \author{Anthony Scopatz}
 \affil{The University of Chicago\\
@@ -229,6 +229,7 @@ Cascades with a greater numbers of components will be discussed in \S \ref{sec:r
 
 \subsection{The MARC Equations}
 \label{sec:marceq}
+
 The method to compute matched abundance ratio cascades has been 
 previously described in other sources, from de la Garza in the
 1960s. This method is explained here in order to build up to the symbolic first and 
@@ -379,58 +380,25 @@ and equation \ref{ltot-over-feed}.
 \subsection{Symbolic Enrichment Solver}
 \label{sec:symes}
 
-When solving a system of equations, it is advantageous if any of the independent 
-variables has a closed form representation in terms of the other independent 
-parameters. This is because the closed form solution may be substituted into 
-the remaining equations and this variable eliminated from the computation.  This
-transforms the system from $X$ equations with $X$ unknowns into a system with 
-$(X-1)$ equations and $(X-1)$  unknowns.  Ideally, the system is reducible 
-to one equation as a function of one unknown, having potentially undergone many 
-substitutions.
+The symbolic MARC algorithm \cite{Scopatz2012} eliminates the $N_P$ and $N_T$ 
+variables from equations \ref{prod-constraint}-\ref{minlt-constraint}, yielding a 
+single expression for $L/F$.  This is then passed to a one dimensional minimization 
+solver.  For $N_T$ a closed form expression exists.  Thus eliminating this unknown 
+is easy.  However for $N_P$ a closed form expression is mathematically impossible.  
+Therefore here, first and second order approximations are implemented which solve for
+$N_P$ in terms of $M^*$.  
 
-The symbolic MARC algorithm here relies on eliminating the $N_P$ and $N_T$ variables
-from equations \ref{prod-constraint}-\ref{minlt-constraint}. This produces a single
-expression for $L/F$, which may be handed to a traditional minimization algorithm.
-Thus, the strategy for engineering a successful symbolic solver for a given system
-of equations is distinct from the normal numeric mechanisms.
+The \emph{a priori} reason for examining both first and second order cases is that 
+while the first order case will sacrafice some fidelity it will also have faster 
+execution times.  Thus if the first order solution is accurate enough it would be 
+advantageous to use it instead of the second order solution in the overall 
+minimzation calculation.  In either case, this approximation will be computed quite
+often since it is inside of the $L/F$ minimizer.
 
-Unlike numeric solvers where every expression is evaluated with an integer, real, or
-complex number as it is encountered, symbolic computation represents and stores all 
-operations performed on an expression.  Only after the accumulation of all 
-operations -- and only if desired by the user -- is a symbolic expression ever numerically
-evaluated.  This is true even for compound operators such as trigonometric functions, 
-differentiation, and integration.
-
-Hence certain operators may explode the number of binary
-operations in the resultant expression after their application. 
-(For example, the chain rule for differentiation may have many more terms that 
-the original function.)
-So while the quintessential strategy in numerical solvers is to mitigate error
-stemming from floating point arithmetic, a symbolic solver seeks to minimize the total
-number of irreducible operations ($+, -, \times, /, \%, \log, \sin, \mbox{abs},$ etc.). 
-Therefore much of the variable
-elimination below also attempts to simultaneously curtail the overall operation count. 
-
-Start by considering the constraint in equation \ref{prod-constraint}, the key 
-component simplification of $P/F$ seen in equation \ref{ppf-key}, and the number
-of tails stages $N_T$.  A call to SymPy's \texttt{solve()} function rearranges the 
-constraint to reveal the closed form solution $N_T(N_P, M^*)$:
-\begin{equation}
-\begin{array}{lcl}
-N_T & = & \left[- M^{*} N_{P} \log{\left (\alpha \right )} - M^{*} \log{\left (\alpha \right )} + M_{j} \log{\left (\alpha \right )} - \log{\left (x^{T}_{j} \right )} \right. \\ 
-& & \left. - \log{\left (\frac{- x^{F}_{j} + x^{P}_{j}}{\alpha^{M^{*} N_{P}} x^{F}_{j} x^{P}_{j} - \alpha^{M^{*} N_{P}}x^{F}_{j} x^{T}_{j} - \alpha^{M_{j} N_{P}} x^{F}_{j} x^{P}_{j} + \alpha^{M_{j} N_{P}} x^{P}_{j} x^{T}_{j}} \right )} \right] \\
-& & \times \left[\left(M^{*} - M_{j}\right) \log{\left (\alpha \right )} \right]^{-1}
-\end{array}
-\label{nt_closed_full}
-\end{equation}
-While equation \ref{nt_closed_full} is only a function of known 
-parameters, $N_P$, and $M^*$, it is not an exemplary expression.  This is because both 
-$M^*$ and $N_P$ each appear five times in this closed form solution.  Thus if this 
-were substituted into the original MARC system to eliminate $N_T$, the number of 
-instances of independent variables would grow by a ratio of 10:1.    
-
-To decrease the substitution ratio and simplify the expression, equation 
-\ref{nt_closed_full} may be rewritten (by hand) as the following:
+Begin with the constraint seen in equation \ref{prod-constraint}, the
+value of $P/F$ as per equation \ref{ppf-key}, and the number
+of tails stages $N_T$.   This is given by following the closed form solution 
+$N_T(N_P, M^*)$ (see \cite{Scopatz2012}):
 \begin{equation}
 \begin{array}{lcl}
 N_T & = & \left[M^{*} \log{\left (\alpha \right )} - M_{j} \log{\left (\alpha \right )} + \log{\left (x^{T}_{j} \right )} + \log{\left (\frac{-1.0 + \frac{x^{P}_{j}}{x^{F}_{j}}}{x^{P}_{j} - x^{T}_{j}} \right )}  \right. \\
@@ -438,137 +406,145 @@ N_T & = & \left[M^{*} \log{\left (\alpha \right )} - M_{j} \log{\left (\alpha \r
 \end{array}
 \label{nt_closed}
 \end{equation}
-Note that this transformation requires the logarithm identity 
-$\log(a+c) = \log(a) + \log(1 + \frac{c}{a})$.  Equation \ref{nt_closed} is superior
-in the sense that it requires 31 operations to as opposed to the original 38.
-More importantly, $N_P$ appears only once in this 
-expression and $M^*$ is reduced to three occurrences.
 
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[scale=0.5]{nt_closed.eps}
-\caption{$N_T(N_P, M^*)$ for a natural uranium cascade with $N_P\in[1,50]$ and 
-    $M^*=236.547$.}
+\caption{$N_T(N_P, M^*)$ for a four component uranium re-enrichment cascade with 
+         $N_P\in[1,50]$ and $M^*=236.547$.}
 \label{nt_closed_fig}
 \end{center}
 \end{figure}
 
-Figure \ref{nt_closed_fig} confirms that the closed form $N_T(N_P, M^*)$ is correct.
+Figure \ref{nt_closed_fig} indicates that the closed form $N_T(N_P, M^*)$ is correct.
 For an increasing number of enriching stages, the stripping stages must also 
 increase to maintain the proper mass flow rates.
-This figure was computed 
-with the feed concentrations seen in Table \ref{feed_nu} and the following other 
-cascade parameters: $M^*=236.547$, $N_P^0=30$, $N_T^0=10$, $\alpha=1.05$, 
+This data, and all remaining results, was computed 
+with the feed concentrations in Table \ref{feed_vision}, 
+$M^*=236.547$, $N_P^0=30$, $N_T^0=10$, $\alpha=1.05$, 
 \nuc{U}{235} as the \jth key component, \nuc{U}{238} as the \kth key component, 
 $x_j^P=0.055$, and $x_j^T=0.0025$.
-Therefore, equation \ref{nt_closed} allows for the elimination of $N_T$ as an 
-independent variable when computing $L/F$ and $N_P$.  
+Thus equation \ref{nt_closed} allows for the elimination of $N_T$ as an 
+independent variable when computing $L/F$ and, more importantly here, $N_P$.  
 
 \begin{table}[htbp]
 \begin{center}
-\caption{Feed flow concentrations for a natural uranium cascade.}
-\include{feed_nu}
-\label{feed_nu}
+\caption{Feed flow concentrations for a four component uranium re-enichment cascade.}
+\include{feed_vision}
+\label{feed_vision}
 \end{center}
 \end{table}
 
-Next, examine the MARC constraint in equation \ref{tail-constraint}.  This states that
-the tails concentration of the \jth key component that is computed by the concentration
-equations \emph{must} be equal to the concentration specified for the cascade in the
-initial conditions.  (Recall that $x_j^T$ is one of the known parameters.)  
-Substituting $N_T(N_P, M^*)$ into this expression, the function $f$ is obtained:
+Continuing on, the next MARC constraint is equation \ref{tail-constraint}.  
+This maintains
+the tails concentration of the second key component \emph{must} be equal to the 
+concentration specified in the initial conditions.  
+Substituting in the closed form solution of $N_T(N_P, M^*)$ above into the constraint, 
+the function $f$ may be defined:
 \begin{equation}
 f(N_P,M^*) =
 \left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}}
                                            {\beta_j^{N_T(N_P,M^*)+1} - \beta_j^{-N_P}} \right)
 - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) \equiv 0
+\label{fdefine}
 \end{equation}
-Here again, like with $P/F$ above, the key component simplification of $T/F$ in 
-equation \ref{tpf-key} is used.
-
-It would be highly valuable if the terms in $f(N_P,M^*)$ were rearrangeable into 
-a closed form expression
-for either $N_P$ or $M^*$.  Since there are fewer instances of $N_P$, the number of
-enriching stages would be the preferred candidate.  However from Galois theory, 
-due to structure of $f(N_P,M^*)$ no such closed form solution is possible.  Examining
-with respect to just $N_P$, the structure of $f$ roughly fits:
-\begin{equation}
-\frac{1 + \alpha^{-N_P}}{\alpha^{-\log(\alpha^{-N_P})+1} - \alpha^{-N_P}} - x_j^T
-    \frac{1 + \alpha^{-N_P}}{\alpha^{-\log(\alpha^{-N_P})+1} - \alpha^{-N_P}} -
-    \cdots 
-\end{equation}
-Even this overly simplified representation cannot be rearranged as is to give a 
-closed form function for $N_P$.  It may be possible to achieve such an expression 
-by making logarithm approximations, such as $\log(a) \approx a - 1$ for $a\approx1$.  
-This could 
-eliminate the nested powers of $N_P$ which would potentially yield
-a closed form representation.  However, since the $\log$ terms appear in the exponent
-of $\alpha$, any error induced by these approximations would be compounded 
-unnecessarily.  Therefore this line of inquiry was not pursued further.
+The simplified version of $T/F$ in equation \ref{tpf-key} is used here.  Note again
+that there is no rearrangement of equation \ref{fdefine} that yields a $N_P$ as 
+a function that does not include itself.  Roughly speaking this is due to the 
+fact that $N_P$ occurs in equation \ref{fdefine} both in exponents of $\beta_i$ and
+in exponents inside the $N_T$ substitiution, which iteself is in an exponent of 
+$\beta_j$.  From Galois theory, these nested powers of $N_P$ imply that no closed form 
+solution is possible.   Hence there is the need to approximate $f(N_P, M^*)$ and then
+solve this in closed form for $N_P$.
 
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[scale=0.5]{np_constraint.eps}
 \caption{$f(N_P, M^*)$ over the range of possible $N_P$ and $M^*$ values.  The black
-contour line represents $f(N_P, M^*)=0$ and is the solution to the MARC constraint
-in equation \ref{tail-constraint}. 
-Data was computed for a typical natural uranium fed cascade.}
+dashed contour line represents $f(N_P, M^*)=0$ and is the solution to the MARC 
+constraint in equation \ref{tail-constraint}. 
+Data was computed for a four component uranium re-enrichment cascade.}
 \label{np_constraint_fig}
 \end{center}
 \end{figure}
 
-Instead, $f(N_P,M^*)$ was plotted as an unconstrained function of its two remaining 
-independent variables to produce the heat map that may be seen in Figure 
-\ref{np_constraint_fig}.  Since the range of $f$ contains both positive and negative
-values, it follows that there must be some combination of $(N_P,M^*)$ which
-satisfy the original MARC constraint.  This $f(N_P, M^*)=0$ set is displayed on Figure 
-\ref{np_constraint_fig} as the black contour.  While this contour could hypothetically
-be used itself to provide a closed form $N_P(M^*)$ equation, such a strategy would 
-be grossly inefficient.  This is because a large number of $f$ points must be 
-numerically evaluated, and then lineally interpolated, to fit such a curve with
-respectable accuracy.
+To gain a sense of the structure of this equation, $f(N_P,M^*)$ was plotted as an 
+unconstrained function of $N_P$ and $M^*$.
+This produces a heat map that may be seen in Figure \ref{np_constraint_fig}.  
+Since the range of $f$ contains both positive and negative
+values, it follows that there must be some combination of the independent variables 
+which satisfies the $f\equiv 0$ constraint.  The solution curve $f(N_P, M^*)=0$ is 
+also shown on Figure \ref{np_constraint_fig} as the black dashed contour.  
+This contour could itself provide the closed form $N_P(M^*)$ equation.
+However, this methodology be very computationally intensive and, thus, slow.  
+This is due to the large number of $f$ points which would have to be 
+computed interpolated create this curve.  This provides another justification as to 
+why an upfront approximation method was used.
 
-Rather, by inspection of Figure \ref{np_constraint_fig}, the $f(N_P, M^*)=0$ curve 
-would be well fit by a second order polynomial on the domain of interest.
-That the constraint follows this form is not obvious from either equation 
-\ref{tail-constraint} or $f(N_P,M^*)$.  The coefficients in 
-such a second order polynomial model cannot be precomputed  numerically and must be 
+\subsection{Taylor Series Approximations}
+\label{sec:aproxmeth}
+
+The value of $f(N_P,M^*)=0$ in equation \ref{fdefine} was approximated using 
+Taylor series expansions to first and second order.  These were then rearranged to 
+$N_P(M^*)$, which is needed to eliminate $N_P$ from the MARC system.  
+Due to the symbolic nature of the underlying algorithm, the coefficients in these
+polynomial expansions cannot be precomputed numerically but must be 
 expressed symbolically in terms of known parameters and independent variables 
 \cite{Sacks:1989:ASS:1623755.1623823}.
+Note that in 
+either case, the approximation of $f$ should match the dashed countour line seen in 
+Figure \ref{np_constraint_fig}, especially in the region near $M_0^*$.
 
-On this basis, represent $f$ by its second order Taylor series expansion with
-respect to $N_P$ close to the initial guess $N_P^0$.
+From here, it is easy to represent $f$ by its first order Taylor series expansion
+$f^{(1)}$ with respect to $N_P$ near the initial guess $N_P^0$.
+\begin{equation}
+f^{(1)}(N_P,M^*) \approx f(N_P^0,M^*) + 
+    \left(N_P -N_P^0\right)\left.\frac{df}{dN_P}\right|_{N_P=N_P^0}
+\label{f1-taylor}
+\end{equation}
+By setting equation \ref{f1-taylor} to zero and rearranging, it is easy to obtain the
+closed form $N_P^{(1)}(M^*)$:
+\begin{equation}
+N_P^{(1)}(M^*) = N_P^0 - \frac{\left.\frac{df}{dN_P}\right|_{N_P=N_P^0}}{f(N_P^0,M^*)}
+\label{np_closed1}
+\end{equation}
+The derivative in this equation is evaluated at initial guess $N_P^0$.
+Note that this is equivalent to Newton's method for $N_P$.
+Now for the second order Taylor series expansion, $f^{(2)}$, is as follows:
 \begin{equation}
 \begin{array}{rcl}
-f(N_P,M^*) & \approx &f(N_P^0,M^*) \\
+f^{(2)}(N_P,M^*) & \approx &f(N_P^0,M^*) \\
 & & + \left(N_P -N_P^0\right)\left.\frac{df}{dN_P}\right|_{N_P=N_P^0} \\
 & & + \frac{\left(N_P -N_P^0\right)^2}{2}\cdot\left.\frac{d^2f}{(dN_P)^2}\right|_{N_P=N_P^0}\\
 \end{array}
-\label{f-taylor}
+\label{f2-taylor}
 \end{equation}
-This may be refactored with the introduction of coefficients $a$, $b$, and $c$ into 
-the canonical polynomial form,
+Equation \ref{f2-taylor} may then be rearranged as a canonical polynomial form
+with coefficients $a$, $b$, and $c$.
 \begin{equation}
 \begin{array}{rcl}
-f(N_P,M^*) & = & a(N_P)^2 + bN_P + c\\
+f^{(2)}(N_P,M^*) & = & a(N_P)^2 + bN_P + c\\
 a & = & \frac{1}{2}\cdot\frac{d^2f}{(dN_P)^2}\\
 b & = & \left.\frac{df}{dN_P}\right|_{N_P=N_P^0} - N_P^0\frac{d^2f}{(dN_P)^2} \\
 c & = & f(N_P^0,M^*) - N_P^0\cdot\frac{df}{dN_P} + \frac{(N_P^0)^2}{2}\frac{d^2f}{(dN_P)^2} \\
 \end{array}
 \label{f-cannon}
 \end{equation}
-where all derivatives in equation \ref{f-cannon} are evaluated at $N_P=N_P^0$.
+All derivatives are again evaluated at $N_P=N_P^0$.
 Applying the constraint $f(N_P,M^*)=0$, 
-a closed form expression $N_P(M^*)$ is trivially solved for via the 
+a closed form expression $N_P(M^*)$ is trivially garnered by the 
 quadratic equation.
 \begin{equation}
-N_P(M^*) = \frac{-b - \sqrt{b^2 - 4ac}}{2a}
-\label{np_closed}
+N_P^{(2)}(M^*) = \frac{-b - \sqrt{b^2 - 4ac}}{2a}
+\label{np_closed2}
 \end{equation}
-Note that for this approximation $a$ is always positive, $b$ is always negative, 
-and the discriminant inside the square root is always positive.  Therefore only the 
-negative solution to the quadratic is needed to obtain a well-bounded result for
-$N_P(M^*)$.
+For the second order approximation $a$ must be positive, $b$ must be negative, 
+and the discriminant is also positive.  Thus the 
+negative root to the quadratic sufficient to to obtain a value of
+$N_P^{(2)}(M^*)$ that is also positive and close to $N_P^0$.
+
+\section{Approximation Results}
+\label{sec:aproxres}
 
 \begin{figure}[htpb]
 \begin{center}
@@ -577,29 +553,35 @@ $N_P(M^*)$.
                                 \includegraphics[scale=0.375]{np_closed_overlay.eps} \\
 (a) & (b) \\
 \end{tabular}
-\caption{$N_T(M^*)$ such that $f(N_P,M^*)=0$.  (a): The quadratic solution to a
-Taylor series approximation. This curve is truncated when negative discriminants 
-would result in a complex solution.  (b): The equation from (a) as a dashed black 
-line overlaid on top of Figure \ref{np_constraint_fig}.  The solid black line is a 
-linearly interpolated contour for $f(N_P, M^*)=0$. The two sub-figures show that 
-$N_P(M^*)$ is an accurate  approximation near the initial guesses $N_P^0$ and 
-$M_0^*=(M_j+M_k)/2$, but less precise far from this point. Data was computed for 
-a typical natural uranium fed cascade.}
+\caption{$N_P(M^*)$ such that $f(N_P,M^*)=0$.  (a): The solution to first and 
+second order Taylor series approximations.  The first order curve is red while the 
+second order curve is black. (b): The equations from (a) overlaid on top of Figure 
+\ref{np_constraint_fig}.  The black dashed line is the contour at $f(N_P, M^*)=0$. 
+Data was computed using a four component uranium re-enrichment cascade.}
 \label{np_closed_fig}
 \end{center}
 \end{figure}
 
-Figure \ref{np_closed_fig} plots the closed form solution to $N_P(M^*)$ both (a)
-on its own and (b) overlaid onto the heat map in Figure \ref{np_constraint_fig}.  
-This shows that the 
-quadratic solution to the second order Taylor series approximation is an astoundingly 
-accurate one when close to the initial conditions $N_P=N_P^0$ and $M_0^*=(M_j+M_k)/2$.
-Naturally being only second order, this approximation breaks down farther away from 
-the initial guess.  For greater values of $N_P$ and $M^*$, the curve begins to 
-over-predict the result until the point that the discriminant becomes negative, the
-solution becomes complex, and the data set is truncated.  For smaller values, the
-result diverges by under-predicting.  That $N_P(M^*)$ deviates at the edges of the
-domain is an expected phenomenon for Taylor series approximations.
+To qualify the validity of the first and second order approximations, 
+Figure \ref{np_closed_fig} plots both closed form solutions to $N_P(M^*)$.
+In Figure \ref{np_closed_fig}(a), these solutions are shown on their own.
+In Figure \ref{np_closed_fig}(b) they are overlaid onto the heat map in 
+Figure \ref{np_constraint_fig}.  
+
+By inspection, the first order solution is almost wholly an inappropriate choice.
+It stays quite near the initial guess for most portions of the domain.  As $M^*$
+approaches $M_0^*$, the first order solution does cross the $f(N_P, M^*)=0$ curve 
+and obtain the correct value.  However, at this point the first order approximation 
+has the wrong sign on its slope.  This alone would make it inapproriate for 
+use in a minimization calculation.  Furthermore, for larger values of $M^*$, an 
+asymtotic-like peak and valley form.  This effectively gaurantees that any minimizer
+would choose the wrong value.
+
+On the other hand, the second order Taylor series approximation is very
+accurate near the initial conditions.  As can be expected this approximation performs
+less well for extreme values of $M^*$.  The second order solution over-predicts the 
+result for the upper end of the domain and under-predicts for the lower end of the 
+domain.  These discrepencies with $N_P^{(2)}(M^*)$ are expected Taylor series.
 
 \begin{figure}[htpb]
 \begin{center}
@@ -610,20 +592,55 @@ Data was computed for a typical natural uranium cascade.}
 \end{center}
 \end{figure}
 
-Therefore, equation \ref{np_closed} may be substituted into equation \ref{nt_closed}
-to obtain an expression $N_T(N_P(M^*),M^*)=N_T(M^*)$ which only depends on $M^*$ and 
-the initial conditions.  Moreover, both equations \ref{nt_closed} \& \ref{np_closed}
-may be substituted into equation \ref{ltot-over-feed} to obtain 
-$L/F(N_P(M^*),N_T(M^*),M^*)=L/F(M^*)$ solely as a function of $M^*$.  Thus
-$L/F(M^*)$ may be minimized using any standard one-dimensional algorithm.
+Both equations \ref{np_closed1} \& \ref{np_closed2} may be substituted into 
+equation \ref{nt_closed}.
+Doing so will obtain an expressions $N_T(N_P(M^*),M^*)=N_T(M^*)$ which only depends on $M^*$ and 
+the initial conditions.  Moreover, equations \ref{nt_closed} \& \ref{np_closed1} or 
+equations \ref{nt_closed} \& \ref{np_closed2} could  then be substituted into 
+equation \ref{ltot-over-feed}.   This would generate and expression 
+$L/F(N_P(M^*),N_T(M^*),M^*)=L/F(M^*)$ only as a function of $M^*$.  From here it 
+simple to minimze $L/F(M^*)$ using any one dimensional method.
 
-Figure \ref{loverf_fig} shows $L/F(M^*)$ for the full domain of $M^*$, demonstrating 
-that this symbolic methodology computes the correct bowl-like shape.  Note that while 
-this method is successful, the number of operations in the final form of $L/T$ may be 
-in the thousands to millions depending on how many components are included in the 
-calculation.  A mechanism for mitigating huge numbers of operations is described
-in \S \ref{sec:codegen}.
+In doing so
+Figure \ref{loverf_fig} displays $L/F(M^*)$ for both the first and second order
+approximations.  The second order method computes the proper bowl-like shape that is
+expected.  This function may be easily minimized.  On the other hand, the asymtotic 
+structure that was present in $N_P^{(1)}(M^*)$ is retained in the computation of 
+$L/F(M^*)$.  Therefore, the first order approximation remains unacceptable when
+solving for the minimum cascade.
 
+\begin{table}[htbp]
+\begin{center}
+\caption{Number of instances of $M^*$ and the number of binary operations in 
+         $L/F(M^*)$ for first and second order Taylor series approximations for a 
+         four component mixture.}
+\begin{tabular}{|l||c|c|}
+\hline
+& \bf{1st order} & \bf{2nd order} \\
+\hline
+No. $M^*$ & 6,852  &  111,012 \\ 
+\hline
+No. Ops   & 57,383 &  945,575 \\ 
+\hline
+\end{tabular}
+\label{count_ops}
+\end{center}
+\end{table}
+
+
+Note that while the second order Taylor series approximation is ultimately much more 
+exact, the number of operations in the final form of $L/F(M^*)$ -- without the 
+elimination of common terms -- is much larger than 
+in the first order case.  Table \ref{count_ops} shows the counts the number of times
+that $M^*$ appears in these expressions and the number of binary operations each 
+takes to compute.  $M^*$ is included in this table as it is the only remaining 
+independent variable.  The first order approximatzion contains about 6\% of the
+$M^*$s that the second order version does.  Furthermore, the second order 
+approximation has almost 16.5 times more operations than the first order 
+approxiation.  Together these illustrate just how unfortunate it is that the first
+order solution is not valid.  Luckily by eliminating common terms most of the 
+performance edge of the first order can be regained in the second order solution
+\cite{Scopatz2012}.
 
 \section{Conclusions \& Future Work}
 \label{sec:conc}
