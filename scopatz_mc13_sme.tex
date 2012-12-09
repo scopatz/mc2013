@@ -86,7 +86,16 @@
 
 \begin{abstract}
 \raggedright
-Some Abstract text.
+This paper descibes closed form, Taylor series approximations to the number 
+product stages in a multicomponent enrichment cascade.  Such closed form 
+approximations are required when a symbolic, rather than a numeric, algorithm
+is used to compute the optimal cascade state.  Both first and second order 
+approximations were implemented.  The first order solution was found to be 
+grossly incorrect, having the wrong functional form over the entire domain.
+On the other hand, the second order solution shows excellent agreement with 
+the `true' solution over the domain of interest. An implementation of the 
+symbolic, second order solver is availbale in the free \& open source 
+PyNE library.
 
 \emph{Key Words}: multicomponent, enrichment, symbolic, PyNE
 \end{abstract}
@@ -138,55 +147,30 @@ possible approximation schemes.
 
 \section{Symbolic Methodology}
 \label{sec:meth}
-At its core, the solution to coupled multicomponent enrichment cascade equations is
-a minimization problem \cite{Wood1999}.  In a matched abundance ratio 
-\cite{DelaGarza1969} cascade this may be cast as the minimization of 
-the total flow rate $L$ through the cascade normalized by the feed flow rate $F$.  
-Thus, the positive and unitless optimization variable $L/F$ is formed.  Traditionally, 
-minimizing this parameter as a function of other cascade state variables has been 
-performed either via off-the-shelf optimization libraries 
-\cite{doi:10.1080/01496391003793884} or custom built solvers \cite{PyNE2012}.
+The MARC equations ultimately yield a minimization \cite{Wood1999}.  Traditionally, 
+this is the minimization of the total flow rate $L$ normalized by the feed flow rate 
+$F$ \cite{DelaGarza1969}.  It is possible to recast this system of equations 
+into a single expression $L/F(M^*)$.  Once this expression is obtained, it 
+may be handed off to any minimization algorithm, such as Newton's
+method, the secant method, or the bisection method.  
 
-However, both of these approaches rely on writing code idiomatic to the underlying 
-programming language.  For example, many numerical constraint optimizers, in order 
-to handle the case of arbitrarily complex expressions, accept as their primary 
-argument a function object or pointer.  Then for every iteration the optimizer must 
-call the function whose inputs are to be optimized.  This involves (in compiled 
-languages) setting up a new stack and allocating new memory for every solver 
-iteration.  While good 
-optimizers will be efficient in terms of the number of function calls they make, 
-there is no way for them to avoid multiple function calls and remain sufficiently 
-general. The number of function calls that are needed scales \emph{at least} linearly 
-with the number of equations in the system.
+However, the functional form of this expression determines the accuracy and 
+quality and computational expense of the overall solution.   Furthermore, this 
+functional form is somewhat variable.  This is because not all indpendent variables
+may be solved for in a closed form manner.    Thus various approximations are made 
+in order to achieve the desired single expression  $L/F(M^*)$.  Here Taylor
+series approximations are made.  The impact of the order of this Taylor series
+is studied.
 
-On the other hand, if it is possible to convert the system of equations 
-into a single expression -- no matter how complicated -- then the problem has been 
-recast into the optimization of a single function over a single variable.   This 
-may be easily handed off to any number of well known algorithms, such as Newton's
-method, the secant method, or the bisection method.  In such a form, the solution 
-will have a vastly reduced computational overhead as compared to standard 
-numerical solvers. 
-
-Naturally, performing the above variable substitution and elimination to obtain a 
-single expression is difficult in many cases and mathematically impossible in most 
-others.  For MARC systems, as is shown in \S \ref{sec:symes}, reduction of $L/F$
-to a single expression is possible.
-
-Rather than phrasing this as a numerical optimization problem from the start, the 
-opposite conceptual tactic is taken.  The MARC system is expanded, manipulated, 
-and substituted symbolically during the majority of the calculation.  The actual 
-numerical results of the calculation are only computed as needed at the final step.
-Symbolic manipulations are concluded prior to compilation, resulting in 
-very fast run time solutions.
-
-In \S \ref{sec:marceq} the standard MARC system of equations is detailed. 
-Then the novel reinterpretation of the MARC equations is related in 
-\S \ref{sec:symes}.  
-Lastly, \S \ref{sec:codegen} characterizes the pipeline that takes the symbolic MARC 
-equations and converts them into fast machine code.  
-For the remainder of \S \ref{sec:meth}, a three-component natural uranium fed 
-cascade will be used when example data is required.
-Cascades with a greater numbers of components will be discussed in \S \ref{sec:res}.
+In \S \ref{sec:marceq} the MARC system of equations is detailed as a way 
+of introducing required terminology. 
+Then the symbolic recasting of the MARC equations is also carried out up to the
+point where approximations are needed in 
+\S \ref{sec:symes}.  Then, \S \ref{sec:aproxmeth} covers the form of both 
+the first and second order Taylor series approximation.
+For the remainder of \S \ref{sec:meth}, a four component uranium re-enrichment 
+cascade will be used when example data is required.  This data was taken from the
+VISION fuel cycle code in a potential used fuel recycle scenario \cite{Jacobson2009}.
 
 \subsection{The MARC Equations}
 \label{sec:marceq}
