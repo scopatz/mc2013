@@ -37,7 +37,7 @@
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
 \newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
 %\newcommand{\nuc}[2]{\superscript{#2}{#1}}
-\newcommand{\nuc}[2]{{#1}{#2}}
+\newcommand{\nuc}[2]{{#1}-{#2}}
 \newcommand{\ith}[0]{$i^{\mbox{th}}$ }
 \newcommand{\jth}[0]{$j^{\mbox{th}}$ }
 \newcommand{\kth}[0]{$k^{\mbox{th}}$ }
@@ -108,12 +108,13 @@ and flow rates through a multicomponent enrichment cascade contain. These may
 be solved either using standard numeric optimizers or by using a symbolic 
 expression library.  The advantage of using a symbolic library is that the 
 representation of the MARC equations looks very similar to its mathematical form.
-The disadvantage is that, without a compilation or code generation step, symbolic 
+The disadvantage is that (without a compilation or code generation step) symbolic 
 libraries tend to be significantly more computationally intensive.  In a related 
 study upon which this paper is based, code generation was used and the symbolic
 solution was found to be 20 - 300 times faster than a standard numeric solver.
 An ecosystem of symbolic mathematics software tools are available: 
-Mathematica \cite{Wolfram2008}, Maple \cite{Maple16},  Maxima \cite{Maxima5}, 
+Mathematica \cite{Wolfram2008}%, 
+%Maple \cite{Maple16},  Maxima \cite{Maxima5}, 
 and SymPy \cite{SymPy2012}.  
 
 The MARC equations for multicomponent separations were originally formulated 
@@ -135,7 +136,7 @@ the actual system of equations being examined.  For MARC and the number of produ
 stages, a Taylor series approximation was used.  Both first and second order 
 approximations are explored here.  In terms of computation efficiency, lower order 
 approximations are desirable.  However, increased order may be required to 
-satisfactorily be able to solve the system of equations.
+satisfactorily be able to solve the system of equations at all.
 
 This paper proceeds as follows.  The symbolic methodology 
 is discussed in \S\ref{sec:meth}.  This includes an overview of the
@@ -156,10 +157,10 @@ method, the secant method, or the bisection method.
 
 However, the functional form of this expression determines the accuracy and 
 quality and computational expense of the overall solution.   Furthermore, this 
-functional form is somewhat variable.  This is because not all independent variables
-may be solved for in a closed form manner.    Thus various approximations are made 
+functional form is somewhat mutable.  This is because not all independent variables
+may be solved for in a closed form manner.    Various approximations are thus made 
 in order to achieve the desired single expression  $L/F(M^*)$.  Here Taylor
-series approximations are made.  The impact of the order of this Taylor series
+series approximations are utilized.  The impact of the order of this Taylor series
 is studied.
 
 In \S \ref{sec:marceq} the MARC system of equations is detailed as a way 
@@ -177,29 +178,30 @@ VISION fuel cycle code in a potential used fuel recycle scenario \cite{Jacobson2
 
 The method to compute matched abundance ratio cascades has been 
 previously described in other sources, from de la Garza in the
-1960s. This method is explained here in order to build up to the symbolic first and 
-second order approximations that will be seen.
+1960s. This method is explained here to build up to the symbolic first and 
+second order approximations.
 For more information please refer to de la Garza
 \cite{DelaGarza1969}, von Halle \cite{VonHalle1987}, Wood \cite{Wood1999}, 
 Song \cite{doi:10.1080/01496391003793884}, or the symbolic methodology on which this 
-work is based \cite{Scopatz2012}.
+work is directly based \cite{Scopatz2012}.
 
-Set $N$ the total number of stages in an enrichment cascade, $N_P$ as the number of 
+Set $N$ to be the total number of stages in an enrichment cascade, $N_P$ as the 
+number of 
 product stages above the feed entry point, and $N_T$ as the number of tails
 stages.  Thus,
 \begin{equation}
 N = N_P + N_T
 \end{equation}
-MARC needs a special nuclide to also be set such that it is enriched in the 
+The MARC system needs a special nuclide to also be set such that it is enriched in the 
 product (subscript P).  This is called the first key component, $j$.  
-There is also be a second key component, $k$, from which $j$ is 
+There is also a second key component, $k$, from which $j$ is 
 separated. Therefore $k$ can be said to be enriched in the tails stream (subscript T).
 
 The overall stage separation factor $\alpha$ [unitless] is the per mass 
-enrichment ratio from one stage to the next.  From $\alpha$ 
+enrichment ratio from one stage to the next.  Given an $\alpha$,
 stage separation factors for individual nuclides may be computed. 
 These are called $\beta_i$ for the \ith component of a mixture $I$ and are 
-computed by:
+defined by:
 \begin{equation}
 \beta_i = \alpha^{M^* - M_i}
 \label{beta_i}
@@ -222,13 +224,13 @@ the conservation equation,
 F = P + T
 \label{total-flow-constraint}
 \end{equation}
-Also have $x$ as a normalized mass concentration vector such that $x_i^F$, 
+Also take $x$ to be normalized mass concentration vectors such that $x_i^F$, 
 $x_i^P$, $x_i^T$ are the concentrations of the \ith nuclide of the feed, product,
 and tails.  From here:
 \begin{equation}
 1 = \sum_i^I x_i^F = \sum_i^I x_i^P = \sum_i^I x_i^T 
 \end{equation}
-The flow rate ratios are seen as follows:
+The flow rate ratios are then seen as follows:
 \begin{equation}
 \frac{P}{F} = \sum_i^I x_i^F\frac{\beta_i^{N_T+1} - 1}
                                  {\beta_i^{N_T+1} - \beta_i^{-N_P}}
@@ -239,7 +241,7 @@ The flow rate ratios are seen as follows:
                                  {\beta_i^{N_T+1} - \beta_i^{-N_P}}
 \label{tpf-full}
 \end{equation}
-Equations \ref{ppf-full} \&  \ref{tpf-full} are then reduced to functions
+Equations \ref{ppf-full} \&  \ref{tpf-full} may also be recast as functions
 of just $j$ for an ideal cascade.
 \begin{equation}
 \frac{P}{F} = \frac{x_j^F - x_j^T}{x_j^P - x_j^T}
@@ -263,14 +265,14 @@ x_i^T = \frac{x_i^F}{\frac{T}{F}}\cdot\frac{1 - \beta_i^{-N_P}}
                                            {\beta_i^{N_T+1} - \beta_i^{-N_P}}
 \label{tail-concentration}
 \end{equation}
-However, the component nuclides themselves are
+Note that the component nuclides themselves are
 also subject to mass conservation:
 \begin{equation}
 x_i^FF = x_i^PP + x_i^TT
 \label{comp-flow-constraint}
 \end{equation}
 
-By their name, MARCs require that at every stage any two flows of 
+Furthermore, MARCs require that at every stage any two flows of 
 the same type ($F$, $P$, \& $T$) must have the same relative concentrations of 
 $j$ \& $k$.  Thus, say that $R$ is an abundance ratio.  For matched abundance 
 ratio cascades, 
@@ -297,7 +299,7 @@ $j$, $k$,
 $M_i$ for all $i\in I$, 
 $x_i^F$ for all $i\in I$, 
 the key product enrichment $x_j^P$, and the key 
-tails enrichment $x_j^T$.  Therefore the optimized cascade is given by 
+tails enrichment $x_j^T$.  Hence the optimized cascade is given by 
 a system of three equations and three unknowns --
 $N_P$, $N_T$, and $M^*$ -- and is therefore well determined.
 \begin{equation}
@@ -330,7 +332,7 @@ variables from equations \ref{prod-constraint}-\ref{minlt-constraint}, yielding 
 single expression for $L/F$.  This is then passed to a one dimensional minimization 
 solver.  For $N_T$ a closed form expression exists.  Thus eliminating this unknown 
 is easy.  However for $N_P$ a closed form expression is mathematically impossible.  
-Therefore here, first and second order approximations are implemented which solve for
+Here, first and second order approximations are implemented which solve for
 $N_P$ in terms of $M^*$.  
 
 The \emph{a priori} reason for examining both first and second order cases is that 
@@ -364,13 +366,13 @@ N_T & = & \left[M^{*} \log{\left (\alpha \right )} - M_{j} \log{\left (\alpha \r
 Figure \ref{nt_closed_fig} indicates that the closed form $N_T(N_P, M^*)$ is correct.
 For an increasing number of enriching stages, the stripping stages must also 
 increase to maintain the proper mass flow rates.
-This data, and all remaining results, was computed 
+This data, and all further results, were computed 
 with the feed concentrations in Table \ref{feed_vision}, 
 $M^*=236.547$, $N_P^0=30$, $N_T^0=10$, $\alpha=1.05$, 
 \nuc{U}{235} as the \jth key component, \nuc{U}{238} as the \kth key component, 
 $x_j^P=0.055$, and $x_j^T=0.0025$.
 Thus equation \ref{nt_closed} allows for the elimination of $N_T$ as an 
-independent variable when computing $L/F$ and, more importantly here, $N_P$.  
+independent variable when computing $L/F$ and -- more importantly here -- $N_P$.  
 
 \begin{table}[htbp]
 \begin{center}
@@ -380,10 +382,9 @@ independent variable when computing $L/F$ and, more importantly here, $N_P$.
 \end{center}
 \end{table}
 
-Continuing on, the next MARC constraint is equation \ref{tail-constraint}.  
-This maintains
-the tails concentration of the second key component \emph{must} be equal to the 
-concentration specified in the initial conditions.  
+Continuing on, the next MARC constraint is given by equation \ref{tail-constraint}.  
+This maintains that the tails concentration of the second key component \emph{must} 
+be equal to the concentration specified in the initial conditions.  
 Substituting in the closed form solution of $N_T(N_P, M^*)$ above into the constraint, 
 the function $f$ may be defined:
 \begin{equation}
@@ -393,9 +394,9 @@ f(N_P,M^*) =
 - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) \equiv 0
 \label{fdefine}
 \end{equation}
-The simplified version of $T/F$ in equation \ref{tpf-key} is used here.  Note again
+The simplified version of $T/F$ in equation \ref{tpf-key} is used here.  Note
 that there is no rearrangement of equation \ref{fdefine} that yields a $N_P$ as 
-a function that does not include itself.  Roughly speaking this is due to the 
+a function which is not dependent on itself.  Roughly speaking, this is due to the 
 fact that $N_P$ occurs in equation \ref{fdefine} both in exponents of $\beta_i$ and
 in exponents inside the $N_T$ substitution, which itself is in an exponent of 
 $\beta_j$.  From Galois theory, these nested powers of $N_P$ imply that no closed form 
@@ -421,17 +422,18 @@ values, it follows that there must be some combination of the independent variab
 which satisfies the $f\equiv 0$ constraint.  The solution curve $f(N_P, M^*)=0$ is 
 also shown on Figure \ref{np_constraint_fig} as the black dashed contour.  
 This contour could itself provide the closed form $N_P(M^*)$ equation.
-However, this methodology be very computationally intensive and, thus, slow.  
+However, this methodology would be very slow.  
 This is due to the large number of $f$ points which would have to be 
-computed interpolated create this curve.  This provides another justification as to 
-why an upfront approximation method was used.
+computed and interpolated create this curve.  This provides another 
+justification as to 
+why an upfront approximation of $N_P(M^*)$ was used.
 
 \subsection{Taylor Series Approximations}
 \label{sec:aproxmeth}
 
 The value of $f(N_P,M^*)=0$ in equation \ref{fdefine} was approximated using 
 Taylor series expansions to first and second order.  These were then rearranged to 
-$N_P(M^*)$, which is needed to eliminate $N_P$ from the MARC system.  
+form $N_P(M^*)$ equations, which are needed to eliminate $N_P$ from the MARC system.  
 Due to the symbolic nature of the underlying algorithm, the coefficients in these
 polynomial expansions cannot be precomputed numerically but must be 
 expressed symbolically in terms of known parameters and independent variables 
@@ -447,15 +449,16 @@ f^{(1)}(N_P,M^*) \approx f(N_P^0,M^*) +
     \left(N_P -N_P^0\right)\left.\frac{df}{dN_P}\right|_{N_P=N_P^0}
 \label{f1-taylor}
 \end{equation}
-By setting equation \ref{f1-taylor} to zero and rearranging, it is easy to obtain the
-closed form $N_P^{(1)}(M^*)$:
+By setting equation \ref{f1-taylor} to zero and rearranging, the
+closed form $N_P^{(1)}(M^*)$ is obtained:
 \begin{equation}
 N_P^{(1)}(M^*) = N_P^0 - \frac{\left.\frac{df}{dN_P}\right|_{N_P=N_P^0}}{f(N_P^0,M^*)}
 \label{np_closed1}
 \end{equation}
-The derivative in this equation is evaluated at initial guess $N_P^0$.
+The derivative in this equation is evaluated at the initial guess $N_P^0$.
 Note that this is equivalent to Newton's method for $N_P$.
-Now for the second order Taylor series expansion, $f^{(2)}$, is as follows:
+
+The second order Taylor series expansion, $f^{(2)}$, is as follows:
 \begin{equation}
 \begin{array}{rcl}
 f^{(2)}(N_P,M^*) & \approx &f(N_P^0,M^*) \\
@@ -464,7 +467,7 @@ f^{(2)}(N_P,M^*) & \approx &f(N_P^0,M^*) \\
 \end{array}
 \label{f2-taylor}
 \end{equation}
-Equation \ref{f2-taylor} may then be rearranged as a canonical polynomial form
+Equation \ref{f2-taylor} may then be rearranged in a canonical polynomial form
 with coefficients $a$, $b$, and $c$.
 \begin{equation}
 \begin{array}{rcl}
@@ -477,7 +480,7 @@ c & = & f(N_P^0,M^*) - N_P^0\cdot\frac{df}{dN_P} + \frac{(N_P^0)^2}{2}\frac{d^2f
 \end{equation}
 All derivatives are again evaluated at $N_P=N_P^0$.
 Applying the constraint $f(N_P,M^*)=0$, 
-a closed form expression $N_P(M^*)$ is trivially garnered by the 
+a closed form expression $N_P(M^*)$ is garnered by the 
 quadratic equation.
 \begin{equation}
 N_P^{(2)}(M^*) = \frac{-b - \sqrt{b^2 - 4ac}}{2a}
@@ -489,7 +492,7 @@ negative root to the quadratic sufficient to to obtain a value of
 $N_P^{(2)}(M^*)$ that is also positive and close to $N_P^0$.
 
 \section{Approximation Results}
-\label{sec:aproxres}
+\label{sec:res}
 
 \begin{figure}[htpb]
 \begin{center}
@@ -510,7 +513,7 @@ Data was computed using a four component uranium re-enrichment cascade.}
 To qualify the validity of the first and second order approximations, 
 Figure \ref{np_closed_fig} plots both closed form solutions to $N_P(M^*)$.
 In Figure \ref{np_closed_fig}(a), these solutions are shown on their own.
-In Figure \ref{np_closed_fig}(b) they are overlaid onto the heat map in 
+In Figure \ref{np_closed_fig}(b) they are overlaid onto the heat map seen in 
 Figure \ref{np_constraint_fig}.  
 
 By inspection, the first order solution is almost wholly an inappropriate choice.
@@ -526,7 +529,7 @@ On the other hand, the second order Taylor series approximation is very
 accurate near the initial conditions.  As can be expected this approximation performs
 less well for extreme values of $M^*$.  The second order solution over-predicts the 
 result for the upper end of the domain and under-predicts for the lower end of the 
-domain.  These discrepancies with $N_P^{(2)}(M^*)$ are expected Taylor series.
+domain.  These discrepancies are expected with Taylor series.
 
 \begin{figure}[htpb]
 \begin{center}
@@ -546,10 +549,10 @@ equation \ref{ltot-over-feed}.   This would generate and expression
 $L/F(N_P(M^*),N_T(M^*),M^*)=L/F(M^*)$ only as a function of $M^*$.  From here it 
 simple to minimize $L/F(M^*)$ using any one dimensional method.
 
-In doing so
-Figure \ref{loverf_fig} displays $L/F(M^*)$ for both the first and second order
+Hence, Figure \ref{loverf_fig} displays $L/F(M^*)$ for both the first and second order
 approximations.  The second order method computes the proper bowl-like shape that is
-expected.  This function may be easily minimized.  On the other hand, the asymptotic 
+known to exist for MARC equations.  This function may be easily minimized.  
+On the other hand, the asymptotic 
 structure that was present in $N_P^{(1)}(M^*)$ is retained in the computation of 
 $L/F(M^*)$.  Therefore, the first order approximation remains unacceptable when
 solving for the minimum cascade.
@@ -576,10 +579,10 @@ No. Ops   & 57,383 &  945,575 \\
 Note that while the second order Taylor series approximation is ultimately much more 
 exact, the number of operations in the final form of $L/F(M^*)$ -- without the 
 elimination of common terms -- is much larger than 
-in the first order case.  Table \ref{count_ops} shows the counts the number of times
+in the first order case.  Table \ref{count_ops} counts the number of times
 that $M^*$ appears in these expressions and the number of binary operations each 
-takes to compute.  $M^*$ is included in this table as it is the only remaining 
-independent variable.  The first order approximation contains about 6\% of the
+order takes to compute $L/F$.  
+ The first order approximation contains about 6\% of the
 $M^*$s that the second order version does.  Furthermore, the second order 
 approximation has almost 16.5 times more operations than the first order 
 approximation.  Together these illustrate just how unfortunate it is that the first
@@ -590,7 +593,7 @@ performance edge of the first order can be regained in the second order solution
 \section{Conclusions \& Future Work}
 \label{sec:conc}
 
-Given any system equations, it is often desirable to solve them via variable 
+Given any system equations it is often desirable to solve them via variable 
 elimination.  Unfortunately, closed form solutions for each independent variable
 may not always be possible (see Galois theory).  In such cases, approximations to 
 the different variables may be used to obtain closed form solutions which are
@@ -602,7 +605,7 @@ the quality of the solution and how expensive it is to compute.
 For the multicomponent MARC enrichment equations, the number of product stages 
 required does not have a closed form solution.  Here instead a first and second 
 order Taylor series approximations were used.  The first order approximation 
-yielded and insufficient or incorrect form over the entire domain.  However, 
+yielded an insufficient or incorrect form over the entire domain.  However, 
 the second order solution was very accurate over the domain of interest.  While 
 the second order approximation deviated for extreme values of the domain, this 
 tends not to matter as such domain values are not typically encountered.  
