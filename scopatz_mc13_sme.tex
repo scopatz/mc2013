@@ -86,7 +86,7 @@
 
 \begin{abstract}
 \raggedright
-This paper descibes closed form, Taylor series approximations to the number 
+This paper describes closed form, Taylor series approximations to the number 
 product stages in a multicomponent enrichment cascade.  Such closed form 
 approximations are required when a symbolic, rather than a numeric, algorithm
 is used to compute the optimal cascade state.  Both first and second order 
@@ -94,7 +94,7 @@ approximations were implemented.  The first order solution was found to be
 grossly incorrect, having the wrong functional form over the entire domain.
 On the other hand, the second order solution shows excellent agreement with 
 the `true' solution over the domain of interest. An implementation of the 
-symbolic, second order solver is availbale in the free \& open source 
+symbolic, second order solver is available in the free \& open source 
 PyNE library.
 
 \emph{Key Words}: multicomponent, enrichment, symbolic, PyNE
@@ -125,8 +125,8 @@ version uses variable substitution and elimination to reduce the system to one
 equation and one unknown.
 
 However, when reducing systems by variable elimination, closed form expressions for 
-all independent variables are required.  For some indpendent variables this is 
-relatively easy to acomplish. For others, such as the number of product stages in
+all independent variables are required.  For some independent variables this is 
+relatively easy to accomplish. For others, such as the number of product stages in
 a cascade, it may be shown that no closed form solution is possible.  In such cases 
 the strategy is to derive a closed form approximation for this independent variable.
 
@@ -141,7 +141,7 @@ This paper proceeds as follows.  The symbolic methodology
 is discussed in \S\ref{sec:meth}.  This includes an overview of the
 MARC equations, a description of the symbolic strategy, and the
 derivation of both first and second order approximations.
-The results of the Tayor series approximations are then presented in \S\ref{sec:res}. 
+The results of the Taylor series approximations are then presented in \S\ref{sec:res}. 
 Lastly, \S\ref{sec:conc} discusses the validity of each approximation and other
 possible approximation schemes.
 
@@ -156,7 +156,7 @@ method, the secant method, or the bisection method.
 
 However, the functional form of this expression determines the accuracy and 
 quality and computational expense of the overall solution.   Furthermore, this 
-functional form is somewhat variable.  This is because not all indpendent variables
+functional form is somewhat variable.  This is because not all independent variables
 may be solved for in a closed form manner.    Thus various approximations are made 
 in order to achieve the desired single expression  $L/F(M^*)$.  Here Taylor
 series approximations are made.  The impact of the order of this Taylor series
@@ -334,10 +334,10 @@ Therefore here, first and second order approximations are implemented which solv
 $N_P$ in terms of $M^*$.  
 
 The \emph{a priori} reason for examining both first and second order cases is that 
-while the first order case will sacrafice some fidelity it will also have faster 
+while the first order case will sacrifice some fidelity it will also have faster 
 execution times.  Thus if the first order solution is accurate enough it would be 
 advantageous to use it instead of the second order solution in the overall 
-minimzation calculation.  In either case, this approximation will be computed quite
+minimization calculation.  In either case, this approximation will be computed quite
 often since it is inside of the $L/F$ minimizer.
 
 Begin with the constraint seen in equation \ref{prod-constraint}, the
@@ -374,7 +374,7 @@ independent variable when computing $L/F$ and, more importantly here, $N_P$.
 
 \begin{table}[htbp]
 \begin{center}
-\caption{Feed flow concentrations for a four component uranium re-enichment cascade.}
+\caption{Feed flow concentrations for a four component uranium re-enrichment cascade.}
 \include{feed_vision}
 \label{feed_vision}
 \end{center}
@@ -397,7 +397,7 @@ The simplified version of $T/F$ in equation \ref{tpf-key} is used here.  Note ag
 that there is no rearrangement of equation \ref{fdefine} that yields a $N_P$ as 
 a function that does not include itself.  Roughly speaking this is due to the 
 fact that $N_P$ occurs in equation \ref{fdefine} both in exponents of $\beta_i$ and
-in exponents inside the $N_T$ substitiution, which iteself is in an exponent of 
+in exponents inside the $N_T$ substitution, which itself is in an exponent of 
 $\beta_j$.  From Galois theory, these nested powers of $N_P$ imply that no closed form 
 solution is possible.   Hence there is the need to approximate $f(N_P, M^*)$ and then
 solve this in closed form for $N_P$.
@@ -437,7 +437,7 @@ polynomial expansions cannot be precomputed numerically but must be
 expressed symbolically in terms of known parameters and independent variables 
 \cite{Sacks:1989:ASS:1623755.1623823}.
 Note that in 
-either case, the approximation of $f$ should match the dashed countour line seen in 
+either case, the approximation of $f$ should match the dashed contour line seen in 
 Figure \ref{np_constraint_fig}, especially in the region near $M_0^*$.
 
 From here, it is easy to represent $f$ by its first order Taylor series expansion
@@ -517,16 +517,16 @@ By inspection, the first order solution is almost wholly an inappropriate choice
 It stays quite near the initial guess for most portions of the domain.  As $M^*$
 approaches $M_0^*$, the first order solution does cross the $f(N_P, M^*)=0$ curve 
 and obtain the correct value.  However, at this point the first order approximation 
-has the wrong sign on its slope.  This alone would make it inapproriate for 
+has the wrong sign on its slope.  This alone would make it inappropriate for 
 use in a minimization calculation.  Furthermore, for larger values of $M^*$, an 
-asymtotic-like peak and valley form.  This effectively gaurantees that any minimizer
+asymptotic-like peak and valley form.  This effectively guarantees that any minimizer
 would choose the wrong value.
 
 On the other hand, the second order Taylor series approximation is very
 accurate near the initial conditions.  As can be expected this approximation performs
 less well for extreme values of $M^*$.  The second order solution over-predicts the 
 result for the upper end of the domain and under-predicts for the lower end of the 
-domain.  These discrepencies with $N_P^{(2)}(M^*)$ are expected Taylor series.
+domain.  These discrepancies with $N_P^{(2)}(M^*)$ are expected Taylor series.
 
 \begin{figure}[htpb]
 \begin{center}
@@ -544,12 +544,12 @@ the initial conditions.  Moreover, equations \ref{nt_closed} \& \ref{np_closed1}
 equations \ref{nt_closed} \& \ref{np_closed2} could  then be substituted into 
 equation \ref{ltot-over-feed}.   This would generate and expression 
 $L/F(N_P(M^*),N_T(M^*),M^*)=L/F(M^*)$ only as a function of $M^*$.  From here it 
-simple to minimze $L/F(M^*)$ using any one dimensional method.
+simple to minimize $L/F(M^*)$ using any one dimensional method.
 
 In doing so
 Figure \ref{loverf_fig} displays $L/F(M^*)$ for both the first and second order
 approximations.  The second order method computes the proper bowl-like shape that is
-expected.  This function may be easily minimized.  On the other hand, the asymtotic 
+expected.  This function may be easily minimized.  On the other hand, the asymptotic 
 structure that was present in $N_P^{(1)}(M^*)$ is retained in the computation of 
 $L/F(M^*)$.  Therefore, the first order approximation remains unacceptable when
 solving for the minimum cascade.
@@ -579,10 +579,10 @@ elimination of common terms -- is much larger than
 in the first order case.  Table \ref{count_ops} shows the counts the number of times
 that $M^*$ appears in these expressions and the number of binary operations each 
 takes to compute.  $M^*$ is included in this table as it is the only remaining 
-independent variable.  The first order approximatzion contains about 6\% of the
+independent variable.  The first order approximation contains about 6\% of the
 $M^*$s that the second order version does.  Furthermore, the second order 
 approximation has almost 16.5 times more operations than the first order 
-approxiation.  Together these illustrate just how unfortunate it is that the first
+approximation.  Together these illustrate just how unfortunate it is that the first
 order solution is not valid.  Luckily by eliminating common terms most of the 
 performance edge of the first order can be regained in the second order solution
 \cite{Scopatz2012}.
@@ -590,9 +590,9 @@ performance edge of the first order can be regained in the second order solution
 \section{Conclusions \& Future Work}
 \label{sec:conc}
 
-Given any system equations, it is often desirable to solve them via varibale 
+Given any system equations, it is often desirable to solve them via variable 
 elimination.  Unfortunately, closed form solutions for each independent variable
-may not always be possible (see Galois theory).  In such cases, appoximations to 
+may not always be possible (see Galois theory).  In such cases, approximations to 
 the different variables may be used to obtain closed form solutions which are
 adequately accurate.  However, the order to which these approximations are made
 determines the validity of the overall solution.  This order is especially 
@@ -600,13 +600,13 @@ important if the system will be optimized.  However, there is a tension between
 the quality of the solution and how expensive it is to compute.
 
 For the multicomponent MARC enrichment equations, the number of product stages 
-required does not have a closed form solution.  Here instead afirst and second 
+required does not have a closed form solution.  Here instead a first and second 
 order Taylor series approximations were used.  The first order approximation 
-yeilded and insufficent or incorect form over the entire domain.  However, 
+yielded and insufficient or incorrect form over the entire domain.  However, 
 the second order solution was very accurate over the domain of interest.  While 
 the second order approximation deviated for extreme values of the domain, this 
 tends not to matter as such domain values are not typically encountered.  
-Therefore, it is recomended that all further computations use at least a second order
+Therefore, it is recommended that all further computations use at least a second order
 method.
 
 Further work on the subject of approximating $N_P$ may include higher order Taylor
