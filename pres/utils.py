@@ -56,7 +56,7 @@ _table_style = {
     },
   }
 
-def htmltable(table, name, style=None, highlight_color='#f3f8aa', 
+def htmltable(table, name, title=None, style=None, highlight_color='#f3f8aa', 
               headers=frozenset([0])):
     if style is None:
         style = {}
@@ -82,4 +82,7 @@ def htmltable(table, name, style=None, highlight_color='#f3f8aa',
                 tstr += "<{tx}>{val}</{tx}>".format(val=cell, tx=tx)
         tstr += "</tr>\n"
     tstr += '</table>'
+    if title is not None:
+        title = '<div style="text-align:center;"><b>{0}</b></div>\n'.format(title)
+        tstr = title + tstr
     return meta, tstr

@@ -14,3 +14,4 @@
 *.xml
 cover/*.png
 cover/*.eps
+*.pyc
