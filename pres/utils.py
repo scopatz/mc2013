@@ -2,7 +2,7 @@ import os
 from collections import Mapping
 
 _tablemeta = """<script type="text/javascript">
-    window.onload=function(){{
+window.onload=function(){{
     var tfrow = document.getElementById('{name}id').rows.length;
     var tbRow=[];
     for (var i=1;i<tfrow;i++) {{
