@@ -1330,6 +1330,8 @@ table.terminologyclass td {padding:4px;border-style:solid;border-color:#a9a9a9;b
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2>MARC Equations</h2>
 <p>The total flow rate normaizled by the feed flow rate may be computed from,</p>
+<br />
+
 <div style="text-align:center;">
 $\frac{L}{F} = \sum_i^I \frac{\frac{P}{F}x_i^P\ln\left(\frac{x_j^P}{x_k^P}\right) + \frac{T}{F}x_i^T\ln\left(\frac{x_j^T}{x_k^T}\right)
                                  - x_i^F\ln\left(\frac{x_j^F}{x_k^F}\right)}
@@ -1341,13 +1343,19 @@ $\frac{L}{F} = \sum_i^I \frac{\frac{P}{F}x_i^P\ln\left(\frac{x_j^P}{x_k^P}\right
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2>MARC Equations</h2>
 <p>The following MARC constraints equations must then be solved for $N_P$, $N_T$, and $M^*$.</p>
+<br />
+
 <div style="text-align:center;">
 $\frac{x_j^P}{x_j^F}\cdot\frac{P}{F} - \frac{\beta_j^{N_T+1} - 1}{\beta_j^{N_T+1} - \beta_j^{-N_P}} = 0$
 </div>
 
+<br />
+
 <div style="text-align:center;">
 $\left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}}{\beta_j^{N_T+1} - \beta_j^{-N_P}}\right) - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) = 0$
 </div>
+
+<br />
 
 <div style="text-align:center;">
 $\min\left[\frac{L}{F}\right]\to \frac{d}{dM^*} \frac{L}{F} = 0$
@@ -1447,6 +1455,8 @@ table.visionfeedclass td {padding:4px;border-color:#a9a9a9;border-style:solid;bo
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2>Elimination of $N_T$</h2>
 <p>Luckily, there is an analytic solution to $N_T(N_P, M^*)$</p>
+<br />
+
 <div style="text-align:center;">
 $\begin{array}{lcl}
 N_T & = & \left[M^{\star} \log{\left(\alpha\right)} - M_{j} \log{\left(\alpha \right)} + \log{\left(x^{T}_{j} \right)} + \log{\left(\frac{-1.0 + \frac{x^{P}\_{j}}{x^{F}\_{j}}}{x^{P}\_{j} - x^{T}_{j}} \right)}  \right. \\
@@ -1465,6 +1475,8 @@ N_T & = & \left[M^{\star} \log{\left(\alpha\right)} - M_{j} \log{\left(\alpha \r
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2>Elimination of $N_P$</h2>
 <p>Call $f$, </p>
+<br />
+
 <div style="text-align:center;">
 $f(N_P,M^*) =
 \left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}}
@@ -1473,13 +1485,15 @@ $f(N_P,M^*) =
 </div>
 </div>
 <div class="fragment text_cell_render border-box-sizing rendered_html">
+<br />
+
 <p>Unfortunately, solving for $N_P(M^\star)$ from $f(N_P, M^\star)$ or $\min\left[\frac{L}{F}\right]$ is impossible.</p>
 </div>
 </section>
 <section>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2>Elimination of $N_P$</h2>
-<div style="text-align:center;"><img src="figs/np_constraint.svg" width="45%" /><h3>Figure 3: $f(N_P, M^\star)$ over the range of possible $N_P$ and $M^\star$ values. The black dashed contour line represents $f(N_P, M^*)=0$</h3></div>
+<div style="text-align:center;"><img src="figs/np_constraint.png" width="45%" /><h3>Figure 3: $f(N_P, M^\star)$ over the range of possible $N_P$ and $M^\star$ values. The black dashed contour line represents $f(N_P, M^*)=0$</h3></div>
 </div>
 </section>
 <section>
@@ -1528,7 +1542,7 @@ N_P^{(2)}(M^*) & = & \frac{-b - \sqrt{b^2 - 4ac}}{2a} \\
 </div>
 <div style=display:none class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">table</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span><span class="s">&#39;&lt;img src=&quot;figs/np_closed.svg&quot; width=&quot;100%&quot; /&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;img src=&quot;figs/np_closed_overlay.svg&quot; width=&quot;100%&quot; /&gt;&#39;</span><span class="p">),</span>
@@ -1598,7 +1612,7 @@ table.approxresfigsclass td {padding:4px;border-style:none;border-color:#a9a9a9;
 </style>
 
 <table id="approxresfigsid" class="approxresfigsclass" border="1">
-<tr><td><img src="figs/np_closed.svg" width="100%" /></td><td><img src="figs/np_closed_overlay.svg" width="100%" /></td></tr>
+<tr><td><img src="figs/np_closed.png" width="100%" /></td><td><img src="figs/np_closed_overlay.png" width="100%" /></td></tr>
 <tr><td>(a)</td><td>(b)</td></tr>
 </table>
 
@@ -1615,7 +1629,7 @@ table.approxresfigsclass td {padding:4px;border-style:none;border-color:#a9a9a9;
 </div>
 <div style=display:none class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">table</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;1st order&quot;</span><span class="p">,</span> <span class="s">&quot;2nd order&quot;</span><span class="p">),</span>
@@ -1703,7 +1717,7 @@ table.loverscalingclass td {padding:4px;border-color:#a9a9a9;border-style:solid;
 </div>
 <div style=display:none class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="n">table</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span><span class="s">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s">&quot;Approximation&quot;</span><span class="p">,</span> <span class="s">&quot;Exact&quot;</span><span class="p">,</span> <span class="s">&quot;Difference&quot;</span><span class="p">),</span>
@@ -1820,6 +1834,16 @@ table.benchmarkclass td {padding:4px;border-color:#a9a9a9;border-style:solid;bor
 </section>
 <section>
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2>PyNE</h2>
+<div style="text-align:center;"><img src="http://pynesim.org/_static/pyne_icon_small.png" style="vertical-align:middle;" hieght="5%" /></div>
+
+<br />
+
+<div style="text-align:center;"><h3><a href="http://pynesim.org">http://pynesim.org</a></h3></div>
+</div>
+</section>
+<section>
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2>Questions</h2>
 <div style="text-align:center;"><img src="http://24.media.tumblr.com/tumblr_m1rk6gkLao1r38bjro10_500.jpg" width="80%" /></div>
 </div>
@@ -1834,7 +1858,7 @@ table.benchmarkclass td {padding:4px;border-color:#a9a9a9;border-style:solid;bor
 </div>
 <div style=display:none class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="input_area box-flex1">
 <div class="highlight"><pre><span class="o">!</span>make
 </pre></div>
