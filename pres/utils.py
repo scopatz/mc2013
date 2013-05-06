@@ -39,7 +39,7 @@ _table_style = {
     'background-color': '#b8b8b8',
     'border-width': '1px',
     'padding': '4px',
-    'order-style':'solid',
+    'border-style':'solid',
     'border-color': '#a9a9a9',
     'text-align': 'left',
     },
