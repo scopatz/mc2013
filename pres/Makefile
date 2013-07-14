@@ -1,17 +1,11 @@
 notebook = scopatz_mc13
-nbcdir = ~/nbconvert
+nbcdir = ~/ipython/IPython/nbconvert
 
 all:
-	cp -r $(nbcdir)/reveal . $<
-	rm -rf reveal/.git* $<
-	mkdir -p js $<
-	cp $(nbcdir)/js/mathjax-onload.js js
-	cp classy.css reveal/css/theme/ $<
-	python $(nbcdir)/nbconvert.py -f reveal $(notebook).ipynb $<
-	sed -i 's:reveal/css/theme/simple.css:reveal/css/theme/classy.css:' $(notebook)_slides.html $<
-	sed -i 's:class="fragment" class="text_cell_render:class="fragment text_cell_render:' $(notebook)_slides.html $<
-	sed -i 's/.rendered_html ul{list-style:disc;margin:1em 2em;}/.rendered_html ul{list-style:disc;margin:0em 2em;}/' $(notebook)_slides.html $<
-	sed -i '/<\!-- Social buttons -->/,/<\!-- End of social buttons -->/d' $(notebook)_slides.html $<
+	ipython nbconvert reveal $(notebook).ipynb $<
+	sed -i 's:<link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/2.4.0/css/theme/simple.css" id="theme">:<link rel="stylesheet" href="classy.css" id="theme">:' $(notebook).reveal.html $<
+# May not be needed anymore
+#	sed -i 's:class="fragment" class="text_cell_render:class="fragment text_cell_render:' $(notebook).reveal.html $<
 
 clean:
 	rm -f *.pdf *.html *.zip
