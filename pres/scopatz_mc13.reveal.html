@@ -18,7 +18,7 @@
 
 <!-- If the query includes 'print-pdf', use the PDF print sheet -->
 <script>
-document.write( '<link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/2.4.0/css/print' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+document.write( '<link rel="stylesheet" href="//cdn.jsdelivr.net/reveal.js/2.4.0/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
 </script>
 
 <!--[if lt IE 9]>
@@ -1906,7 +1906,7 @@ Initial conditions value guess
 Mass fraction of <span class="math"><em>i</em></span>-th component
 </td></tr>
 <tr><td>
-<span class="math">$\\alpha$</span>, <span class="math">$\\beta_i$</span>
+<span class="math">\<em>a</em><em>l</em><em>p</em><em>h</em><em>a</em></span>, <span class="math">\<em>b</em><em>e</em><em>t</em><em>a</em><sub><em>i</em></sub></span>
 </td><td>
 Overall and nuclide stage separation factors
 </td></tr>
@@ -1933,9 +1933,9 @@ Optimization parameter
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="marc-equations">MARC Equations</h2>
 <p>The total flow rate normaizled by the feed flow rate may be computed from,</p>
-<p><br /></p>
+<br />
 <div style="text-align:center;">
-<span class="math">$\frac{L}{F} = \sum_i^I \frac{\frac{P}{F}x_i^P\ln\left(\frac{x_j^P}{x_k^P}\right) + \frac{T}{F}x_i^T\ln\left(\frac{x_j^T}{x_k^T}\right)                                  - x_i^F\ln\left(\frac{x_j^F}{x_k^F}\right)}                                 {\ln(\beta_j)\frac{\beta_i - 1.0}{\beta_i + 1.0}}$</span>
+<span class="math">$\frac{L}{F} = \sum_i^I \frac{\frac{P}{F}x_i^P\ln\left(\frac{x_j^P}{x_k^P}\right) + \frac{T}{F}x_i^T\ln\left(\frac{x_j^T}{x_k^T}\right) - x_i^F\ln\left(\frac{x_j^F}{x_k^F}\right)} {\ln(\beta_j)\frac{\beta_i - 1.0}{\beta_i + 1.0}}$</span>
 </div>
 
 </div></section>
@@ -1944,17 +1944,17 @@ Optimization parameter
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="marc-equations">MARC Equations</h2>
 <p>The following MARC constraints equations must then be solved for <span class="math"><em>N</em><sub><em>P</em></sub></span>, <span class="math"><em>N</em><sub><em>T</em></sub></span>, and <span class="math"><em>M</em><sup> * </sup></span>.</p>
-<p><br /></p>
+<br />
 <div style="text-align:center;">
 <span class="math">$\frac{x_j^P}{x_j^F}\cdot\frac{P}{F} - \frac{\beta_j^{N_T+1} - 1}{\beta_j^{N_T+1} - \beta_j^{-N_P}} = 0$</span>
 </div>
 
-<p><br /></p>
+<br />
 <div style="text-align:center;">
 <span class="math">$\left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}}{\beta_j^{N_T+1} - \beta_j^{-N_P}}\right) - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) = 0$</span>
 </div>
 
-<p><br /></p>
+<br />
 <div style="text-align:center;">
 <span class="math">$\min\left[\frac{L}{F}\right]\to \frac{d}{dM^*} \frac{L}{F} = 0$</span>
 </div>
@@ -2081,9 +2081,9 @@ U-238
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="elimination-of-n_t">Elimination of <span class="math"><em>N</em><sub><em>T</em></sub></span></h2>
 <p>Luckily, there is an analytic solution to <span class="math"><em>N</em><sub><em>T</em></sub>(<em>N</em><sub><em>P</em></sub>, <em>M</em><sup> * </sup>)</span></p>
-<p><br /></p>
+<br />
 <div style="text-align:center;">
-<span class="math">$\begin{array}{lcl} N_T &amp; = &amp; \left[M^{\star} \log{\left(\alpha\right)} - M_{j} \log{\left(\alpha \right)} + \log{\left(x^{T}_{j} \right)} + \log{\left(\frac{-1.0 + \frac{x^{P}\_{j}}{x^{F}\_{j}}}{x^{P}\_{j} - x^{T}_{j}} \right)}  \right. \\ &amp; &amp; \left. - \log{\left(\frac{\alpha^{N_{P} \left(- M^{\star} + M_{j}\right)} \left(x^{F}\_{j} x^{P}\_{j} - x^{P}\_{j} x^{T}\_{j}\right)}{- x^{F}_{j} x^{P}_{j} + x^{F}\_{j} x^{T}_{j}} + 1 \right)}\right] \times \frac{1}{\left(- M^{\star} + M\_{j}\right) \log{\left(\alpha \right)}} \\ \end{array}$</span>
+<span class="math">$\begin{array}{lcl} N_T &amp; = &amp; \left[M^{\star} \log{\left(\alpha\right)} - M_{j} \log{\left(\alpha \right)} + \log{\left(x^{T}_{j} \right)} + \log{\left(\frac{-1.0 + \frac{x^{P}\_{j}}{x^{F}\_{j}}}{x^{P}\_{j} - x^{T}_{j}} \right)} \right. \\ &amp; &amp; \left. - \log{\left(\frac{\alpha^{N_{P} \left(- M^{\star} + M_{j}\right)} \left(x^{F}\_{j} x^{P}\_{j} - x^{P}\_{j} x^{T}\_{j}\right)}{- x^{F}_{j} x^{P}_{j} + x^{F}\_{j} x^{T}_{j}} + 1 \right)}\right] \times \frac{1}{\left(- M^{\star} + M\_{j}\right) \log{\left(\alpha \right)}} \\ \end{array}$</span>
 </div>
 
 </div></section>
@@ -2103,15 +2103,15 @@ Figure 2: <span class="math"><em>N</em><sub><em>T</em></sub>(<em>N</em><sub><em>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="elimination-of-n_p">Elimination of <span class="math"><em>N</em><sub><em>P</em></sub></span></h2>
 <p>Call <span class="math"><em>f</em></span>,</p>
-<p><br /></p>
+<br />
 <div style="text-align:center;">
-<span class="math">$f(N_P,M^*) = \left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}}                                            {\beta_j^{N_T(N_P,M^*)+1} - \beta_j^{-N_P}} \right) - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) \equiv 0$</span>
+<span class="math">$f(N_P,M^*) = \left(\frac{x_j^F}{\frac{T}{F}} \cdot \frac{1 - \beta_i^{-N_P}} {\beta_j^{N_T(N_P,M^*)+1} - \beta_j^{-N_P}} \right) - \left(x_j^T\cdot\sum_i^{I} x_i^T\right) \equiv 0$</span>
 </div>
 
 </div><div class="fragment">
     
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><br /></p>
+<br />
 <p>Unfortunately, solving for <span class="math"><em>N</em>_<em>P</em>(<em>M</em><sup> ⋆ </sup>)</span> from <span class="math"><em>f</em>(<em>N</em>_<em>P</em>, <em>M</em><sup> ⋆ </sup>)</span> or <span class="math">$\min\left[\frac{L}{F}\right]$</span> is impossible.</p>
 </div>
     </div></section>
@@ -2373,7 +2373,7 @@ Number of Operations
 </td></tr>
 </table>
 
-<p><br /></p>
+<br />
 <ul>
 <li>Note: these numbers are prior to CSE.</li>
 </ul>
@@ -2616,7 +2616,7 @@ Figure 6: Execution time for <span class="math"><em>L</em> / <em>F</em>(<em>
 <img src="http://pynesim.org/_static/pyne_icon_small.png" style="vertical-align:middle;" hieght="5%" />
 </div>
 
-<p><br /></p>
+<br />
 <div style="text-align:center;"><h3>
 <a href="http://pynesim.org">http://pynesim.org</a>
 </h3></div>
